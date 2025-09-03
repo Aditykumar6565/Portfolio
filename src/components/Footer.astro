@@ -1,0 +1,14 @@
+---
+// Footer.astro
+import portfolio from '../data/portfolio.js';
+---
+<footer class="mt-12 py-8">
+  <div class="container text-center">
+    <p class="text-sm text-gray-600 dark:text-gray-400">© {new Date().getFullYear()} {portfolio.hero.name}. Built with Astro + Tailwind.</p>
+    <div class="mt-3 flex justify-center gap-4">
+      <a href={portfolio.contact.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+      <a href={`mailto:${portfolio.contact.email}`} aria-label="Email">Email</a>
+      <a href={portfolio.contact.github} target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+    </div>
+  </div>
+</footer>

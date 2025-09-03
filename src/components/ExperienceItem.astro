@@ -1,0 +1,22 @@
+---
+const { item } = Astro.props;
+---
+<div class="card p-4">
+  <div class="flex justify-between items-start">
+    <div>
+      <h4 class="text-md font-semibold">{item.role}</h4>
+      <div class="text-sm text-gray-500 dark:text-gray-300">{item.company} • {item.period}</div>
+    </div>
+    <div class="text-sm text-gray-400">{item.teamSize ? `Team: ${item.teamSize}` : ''}</div>
+  </div>
+
+  <ul class="mt-3 ml-4 list-disc text-sm text-gray-600 dark:text-gray-300">
+    {item.bullets.map(b => <li>{b}</li>)}
+  </ul>
+
+  {item.tech?.length ? (
+    <div class="mt-3 text-xs">
+      <strong>Tech:</strong> {item.tech.join(', ')}
+    </div>
+  ) : null}
+</div>

@@ -1,0 +1,140 @@
+---
+// Navbar.astro
+// Props: none — reads from data import if needed
+import portfolio from '../data/portfolio.js';
+const links = [
+  { href: '#home', label: 'Home' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#skills', label: 'Skills' },
+  { href: '#education', label: 'Education' },
+  { href: '#certificates', label: 'Certificates' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#contact', label: 'Contact' }
+];
+---
+<nav class="w-full sticky top-0 z-40 bg-opacity-60 backdrop-blur-md">
+  <div class="container flex items-center justify-between py-4">
+    <a href="#home" class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+        {portfolio.hero.name.split(' ')[0][0]}
+      </div>
+      <div class="hidden sm:block">
+        <div class="text-sm font-semibold">{portfolio.hero.name}</div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">{portfolio.hero.role}</div>
+      </div>
+    </a>
+
+    <div class="hidden md:flex items-center gap-6">
+      <ul class="flex gap-4 items-center">
+        {links.map(link => (
+          <li>
+            <a class="text-sm hover:text-primary transition-colors" href={link.href}>
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <button id="theme-toggle" aria-label="Toggle dark mode"
+          class="p-2 rounded-md border hover:bg-slate-50 dark:hover:bg-slate-800">
+          <svg id="theme-icon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <!-- icon updated by script -->
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+          </svg>
+        </button>
+
+        <a class="text-sm inline-block rounded-md px-3 py-2 bg-primary text-white hover:opacity-95" href={portfolio.hero.resumeLink} download>
+          {portfolio.hero.ctaText}
+        </a>
+      </div>
+    </div>
+
+    <!-- mobile menu / theme toggle -->
+    <div class="flex md:hidden items-center gap-2">
+      <button id="theme-toggle-mobile" aria-label="Toggle dark mode" class="p-2 rounded-md border">
+        <svg id="theme-icon-mobile" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+
+      <button id="mobile-nav-toggle" class="p-2 rounded-md border" aria-label="Open menu">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12h18M3 6h18M3 18h18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu overlay -->
+  <div id="mobile-menu" class="hidden md:hidden bg-opacity-90 border-t">
+    <div class="container py-4">
+      <ul class="flex flex-col gap-3">
+        {links.map(link => (
+          <li>
+            <a class="block text-base py-2" href={link.href}>{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <script type="module">
+    // Theme toggle script: class strategy + localStorage
+    const root = document.documentElement;
+    const THEME_KEY = 'aditya-theme';
+
+    function setIcon(isDark, iconEl) {
+      if (!iconEl) return;
+      iconEl.innerHTML = isDark
+        ? '<path d=\"M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z\"></path>'
+        : '<circle cx=\"12\" cy=\"12\" r=\"5\"></circle><path d=\"M12 1v2M12 21v2M4.2 4.2 5.6 5.6M18.4 18.4 19.8 19.8M1 12h2M21 12h2M4.2 19.8 5.6 18.4M18.4 5.6 19.8 4.2\"></path>';
+    }
+
+    function applyTheme(pref) {
+      if (pref === 'dark') {
+        root.classList.add('dark');
+        setIcon(true, document.getElementById('theme-icon'));
+        setIcon(true, document.getElementById('theme-icon-mobile'));
+      } else {
+        root.classList.remove('dark');
+        setIcon(false, document.getElementById('theme-icon'));
+        setIcon(false, document.getElementById('theme-icon-mobile'));
+      }
+    }
+
+    // initialize
+    (function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved) {
+        applyTheme(saved);
+      } else {
+        // Respect system preference
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefersDark ? 'dark' : 'light');
+      }
+    })();
+
+    // toggles
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+      setIcon(isDark, document.getElementById('theme-icon'));
+    });
+    document.getElementById('theme-toggle-mobile')?.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+      setIcon(isDark, document.getElementById('theme-icon-mobile'));
+    });
+
+    // mobile nav
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileToggle?.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+</nav>

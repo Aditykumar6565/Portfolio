@@ -1,5 +1,11 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  output: 'static',
+  site: 'https://github.com/Aditykumar6565/Portfolio.git', // replace with your GitHub Pages URL
+  vite: {
+    build: {
+      // any vite-specific tweaks if needed
+    },
+  },
+});

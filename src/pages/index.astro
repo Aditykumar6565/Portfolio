@@ -1,11 +1,185 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import '../styles/global.css';
+import portfolio from '../data/portfolio.js';
+import Navbar from '../components/Navbar.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+import Footer from '../components/Footer.astro';
 ---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{portfolio.siteMeta.title}</title>
+    <meta name="description" content={portfolio.siteMeta.description} />
+    <link rel="icon" href="/favicon.svg" />
+  </head>
 
-<Layout>
-	<Welcome />
-</Layout>
+  <body class="antialiased">
+    <Navbar />
+
+    <main class="container py-12">
+      <!-- HERO -->
+      <section id="home" class="grid gap-8 md:grid-cols-2 items-center py-8 reveal">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-bold">
+            {portfolio.hero.name}
+            <span class="block text-primary text-xl mt-2">{portfolio.hero.role}</span>
+          </h1>
+          <p class="mt-4 text-gray-700 dark:text-gray-300">{portfolio.hero.intro}</p>
+
+          <div class="mt-6 flex gap-3">
+            <a class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md" href={portfolio.hero.resumeLink} download>
+              Download Resume
+            </a>
+            <a class="inline-flex items-center gap-2 px-4 py-2 border rounded-md" href={portfolio.contact.github} target="_blank" rel="noopener">
+              View GitHub
+            </a>
+          </div>
+
+          <div class="mt-6 text-sm text-gray-600 dark:text-gray-400">
+            <div><strong>Location:</strong> {portfolio.contact.location}</div>
+            <div><strong>Email:</strong> <a class="underline" href={`mailto:${portfolio.contact.email}`}>{portfolio.contact.email}</a></div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <div class="text-sm text-gray-600 dark:text-gray-300"><strong>Quick Facts</strong></div>
+          <div class="mt-3 grid grid-cols-2 gap-3">
+            <div>
+              <div class="text-xs text-gray-500">Experience</div>
+              <div class="font-semibold">1.5+ years</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-500">Degree</div>
+              <div class="font-semibold">B.E. CSE</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-500">CGPA</div>
+              <div class="font-semibold">8.7</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-500">Location</div>
+              <div class="font-semibold">{portfolio.contact.location}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section id="experience" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Work Experience</h2>
+        <div class="grid gap-4">
+          {portfolio.experience.map(item => (
+            <ExperienceItem item={item} />
+          ))}
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Skills & Technologies</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="card p-4">
+            <h3 class="font-semibold">Languages</h3>
+            <div class="mt-3 flex flex-wrap gap-2">{portfolio.skills.languages.map(s => <SkillBadge skill={s} />)}</div>
+          </div>
+
+          <div class="card p-4">
+            <h3 class="font-semibold">Frameworks & Libraries</h3>
+            <div class="mt-3 flex flex-wrap gap-2">{portfolio.skills.frameworks.map(s => <SkillBadge skill={s} />)}</div>
+          </div>
+
+          <div class="card p-4">
+            <h3 class="font-semibold">Tools & Platforms</h3>
+            <div class="mt-3 flex flex-wrap gap-2">{portfolio.skills.tools.map(s => <SkillBadge skill={s} />)}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="education" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Education</h2>
+        <div class="grid gap-4">
+          {portfolio.education.map(edu => (
+            <div class="card p-4">
+              <h3 class="text-lg font-semibold">{edu.school}</h3>
+              <div class="text-sm text-gray-600 dark:text-gray-300">{edu.degree} • {edu.period}</div>
+              <div class="mt-2 text-sm">CGPA: <strong>{edu.cgpa}</strong></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CERTIFICATES -->
+      <section id="certificates" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Certificates</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          {portfolio.certificates.map(cert => (
+            <div class="card p-4 text-sm">{cert}</div>
+          ))}
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Projects</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          {portfolio.projects.map(p => <ProjectCard project={p} />)}
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="py-8 reveal">
+        <h2 class="text-2xl font-semibold mb-4">Contact</h2>
+        <div class="grid md:grid-cols-2 gap-6 items-start">
+          <div class="card p-6">
+            <h3 class="font-semibold">Get in touch</h3>
+            <p class="text-sm mt-2 text-gray-700 dark:text-gray-300">I'm currently open to roles related to automation, AI/ML, and full-stack development. Reach out via email or LinkedIn.</p>
+
+            <div class="mt-4 text-sm">
+              <div><strong>Email:</strong> <a class="underline" href={`mailto:${portfolio.contact.email}`}>{portfolio.contact.email}</a></div>
+              <div class="mt-1"><strong>Phone:</strong> {portfolio.contact.phone}</div>
+              <div class="mt-1"><strong>LinkedIn:</strong> <a class="underline" href={portfolio.contact.linkedin}>{portfolio.contact.linkedin}</a></div>
+              <div class="mt-1"><strong>GitHub:</strong> <a class="underline" href={portfolio.contact.github}>{portfolio.contact.github}</a></div>
+            </div>
+          </div>
+
+          <div class="card p-6">
+            <h3 class="font-semibold">Socials</h3>
+            <div class="mt-3 flex flex-col gap-3">
+              <a class="text-sm underline" href={portfolio.contact.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+              <a class="text-sm underline" href={`mailto:${portfolio.contact.email}`}>Email</a>
+              <a class="text-sm underline" href={portfolio.contact.github} target="_blank" rel="noopener">GitHub</a>
+              <a class="text-sm underline" href={portfolio.contact.website} target="_blank" rel="noopener">Portfolio</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+
+    <script type="module">
+      // Intersection observer for simple reveal animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.reveal').forEach(el => {
+        el.classList.add('reveal');
+        observer.observe(el);
+      });
+
+      // Smooth scroll behavior for anchors
+      document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+  </body>
+</html>
